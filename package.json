@@ -1,0 +1,30 @@
+{
+  "name": "sort-things",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "",
+    "build": "tsc",
+    "dev": "nodemon ./src/server.ts",
+    "dev:debug": "nodemon --inspect ./src/server.ts",
+    "test": "jest",
+    "test:v": "jest --verbose",
+    "tslint": "tslint -c tslint.json -p tsconfig.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/node": "^11.13.8",
+    "jest": "^24.7.1",
+    "nodemon": "^1.18.11",
+    "ts-jest": "^24.0.2",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.16.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.4.5"
+  }
+}
