@@ -1,4 +1,4 @@
-enum SQSStatus {
+export enum SQSStatus {
 	Pending,
 	Running,
 	Finish,
@@ -99,8 +99,8 @@ export class StatefulQuickSort<T> {
 				}
 			}
 
-			let item1 = this.arr[this.variables.pivotIndex]
-			let item2 = this.arr[this.variables.currentIndex]
+			let item1 = this.arr[this.variables.currentIndex]
+			let item2 = this.arr[this.variables.pivotIndex]
 			this.compareItems = [item1, item2]
 		}
 
@@ -142,7 +142,7 @@ export class StatefulQuickSort<T> {
 		this.preExecSort()
 		while (!this.isEnd()) {
 			let [item1, item2] = this.getCompareItems()
-			let answer = item1 > item2 ? 0 : 1
+			let answer = item1 < item2 ? 0 : 1
 			this.execSort(answer)
 			this.preExecSort()
 		}

@@ -27,7 +27,7 @@ describe('StatefulQuickSort', () => {
 			while (!qs.isEnd()) {
 				qs = StatefulQuickSort.fromSnapshot(snapshot)
 				let [item1, item2] = qs.getCompareItems()
-				let answer = item2 < item1 ? 0 : 1
+				let answer = item1 < item2 ? 0 : 1
 				qs.execSort(answer)
 				qs.preExecSort()
 				snapshot = qs.getSnapshot()
