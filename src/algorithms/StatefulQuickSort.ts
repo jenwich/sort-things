@@ -1,3 +1,5 @@
+import { shuffle } from '../utils/shuffle'
+
 export enum SQSStatus {
 	Pending,
 	Running,
@@ -35,8 +37,8 @@ export class StatefulQuickSort<T> {
 	private snapshot: IQuickSortSnapshot<T>
 
 	constructor(arr: T[]) {
-		this.arr = [...arr]
-		this.originalArray = [...this.arr]
+		this.originalArray = [...arr]
+		this.arr = shuffle(arr)
 		this.status = SQSStatus.Pending
 		this.stack = []
 		this.compareItems = []
