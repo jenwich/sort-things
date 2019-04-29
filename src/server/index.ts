@@ -1,3 +1,4 @@
+import path from 'path'
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 
@@ -17,8 +18,17 @@ app.listen(3000, () => {
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/', (req: Request, res: Response) => {
-	res.json({ ok: 1 })
+app.use('/', express.static(path.join(process.cwd(), 'public')))
+
+app.get('/status', async (req: Request, res: Response) => {
+	let jsonDB = new JsonDB('db.json')
+	let snapshot: IQuickSortSnapshot<string> = await jsonDB.read()
+
+	if (snapshot.status === 'Finish') {
+		res.json(resultEnd(snapshot))
+	} else {
+		res.json(resultCompare(snapshot))
+	}
 })
 
 app.post('/create', async (req: Request, res: Response) => {
@@ -41,11 +51,7 @@ app.post('/next', async (req: Request, res: Response) => {
 	let qs = StatefulQuickSort.fromSnapshot(snapshot)
 
 	if (qs.isEnd()) {
-		res.json({
-			end: true,
-			items: snapshot.array,
-			originalItems: snapshot.originalArray,
-		})
+		res.json(resultEnd(snapshot))
 	} else {
 		qs.execSort(answer)
 		qs.preExecSort()
@@ -67,12 +73,12 @@ const resultItems = (snapshot: IQuickSortSnapshot<string>) => ({
 })
 
 const resultCompare = (snapshot: IQuickSortSnapshot<string>) => ({
-	end: snapshot.status === SQSStatus.Finish,
+	status: 'Running',
 	...resultItems(snapshot),
 	compareItems: snapshot.compareItems,
 })
 
 const resultEnd = (snapshot: IQuickSortSnapshot<string>) => ({
-	end: true,
+	status: 'Finish',
 	...resultItems(snapshot),
 })

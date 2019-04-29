@@ -17,7 +17,7 @@ interface IQuickSortVariables {
 }
 
 export interface IQuickSortSnapshot<T> {
-	status: number
+	status: string
 	stack: IQuickSortBounds[]
 	variables: IQuickSortVariables
 	compareItems: T[]
