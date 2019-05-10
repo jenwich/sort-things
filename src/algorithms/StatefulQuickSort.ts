@@ -25,6 +25,7 @@ export interface IQuickSortSnapshot<T> {
 	compareItems: T[]
 	array: T[]
 	originalArray: T[]
+	limit: number
 }
 
 export class StatefulQuickSort<T> {
@@ -35,19 +36,24 @@ export class StatefulQuickSort<T> {
 	private variables: IQuickSortVariables
 	private compareItems: T[]
 	private snapshot: IQuickSortSnapshot<T>
+	private limit: number
 
-	constructor(arr: T[]) {
+	constructor(arr: T[], limit: number) {
 		this.originalArray = [...arr]
 		this.arr = shuffle(arr)
 		this.status = SQSStatus.Pending
 		this.stack = []
 		this.compareItems = []
+		this.limit = limit
 	}
 
 	public static fromSnapshot<T>(
 		snapshot: IQuickSortSnapshot<T>
 	): StatefulQuickSort<T> {
-		let instance = new StatefulQuickSort<T>(snapshot.originalArray)
+		let instance = new StatefulQuickSort<T>(
+			snapshot.originalArray,
+			snapshot.limit
+		)
 		instance.status = (<any>SQSStatus)[snapshot.status]
 		instance.stack = snapshot.stack
 		instance.variables = snapshot.variables
@@ -126,10 +132,12 @@ export class StatefulQuickSort<T> {
 
 			this.stack.pop()
 			if (p + 1 < high) {
-				this.stack.push({
-					low: p + 1,
-					high: high,
-				})
+				if (this.limit === 0 || p + 1 <= this.limit - 1) {
+					this.stack.push({
+						low: p + 1,
+						high: high,
+					})
+				}
 			}
 			if (low < p - 1) {
 				this.stack.push({
@@ -158,6 +166,7 @@ export class StatefulQuickSort<T> {
 			compareItems: this.compareItems,
 			array: this.arr,
 			originalArray: this.originalArray,
+			limit: this.limit,
 		}
 	}
 

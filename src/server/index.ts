@@ -33,8 +33,9 @@ app.get('/status', async (req: Request, res: Response) => {
 
 app.post('/create', async (req: Request, res: Response) => {
 	let items: string[] = req.body['items'] || []
+	let limit: number = req.body['limit'] || 2
 
-	let qs = new StatefulQuickSort(items)
+	let qs = new StatefulQuickSort(items, limit)
 	qs.preExecSort()
 	let snapshot = qs.getSnapshot()
 
@@ -67,10 +68,16 @@ app.post('/next', async (req: Request, res: Response) => {
 	}
 })
 
-const resultItems = (snapshot: IQuickSortSnapshot<string>) => ({
-	items: snapshot.array,
-	originalItems: snapshot.originalArray,
-})
+const resultItems = (snapshot: IQuickSortSnapshot<string>) => {
+	let items = snapshot.array
+	if (snapshot.limit > 0) {
+		items = items.slice(0, snapshot.limit)
+	}
+	return {
+		items,
+		originalItems: snapshot.originalArray,
+	}
+}
 
 const resultCompare = (snapshot: IQuickSortSnapshot<string>) => ({
 	status: 'Running',
