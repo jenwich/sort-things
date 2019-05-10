@@ -5,7 +5,6 @@ import bodyParser from 'body-parser'
 import {
 	StatefulQuickSort,
 	IQuickSortSnapshot,
-	SQSStatus,
 } from '../algorithms/StatefulQuickSort'
 import { JsonDB } from '../utils/JsonDB'
 
@@ -35,7 +34,10 @@ app.post('/create', async (req: Request, res: Response) => {
 	let items: string[] = req.body['items'] || []
 	let limit: number = req.body['limit'] || 0
 
-	let qs = new StatefulQuickSort(items, limit)
+	let qs = new StatefulQuickSort(items, {
+		limit,
+		shuffle: true,
+	})
 	qs.preExecSort()
 	let snapshot = qs.getSnapshot()
 

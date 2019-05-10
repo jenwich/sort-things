@@ -9,7 +9,7 @@ let testCases = [
 describe('StatefulQuickSort', () => {
 	it('simulate sort', () => {
 		for (let tc of testCases) {
-			let qs = new StatefulQuickSort(tc[0], 0)
+			let qs = new StatefulQuickSort(tc[0], {})
 			qs.simulate()
 			let got = qs.getArray(),
 				want = tc[1]
@@ -19,7 +19,7 @@ describe('StatefulQuickSort', () => {
 
 	it('simulate sort with import snapshot', () => {
 		for (let tc of testCases) {
-			let qs = new StatefulQuickSort(tc[0], 0)
+			let qs = new StatefulQuickSort(tc[0], {})
 
 			qs.preExecSort()
 			let snapshot = qs.getSnapshot()
@@ -39,10 +39,12 @@ describe('StatefulQuickSort', () => {
 	})
 
 	it('simulate sort with limit', () => {
-		let limits = [1, 1, 1]
+		let limits = [2, 3, 2]
 		for (let i in testCases) {
 			let tc = testCases[i]
-			let qs = new StatefulQuickSort(tc[0], limits[i])
+			let qs = new StatefulQuickSort(tc[0], {
+				limit: limits[i],
+			})
 			qs.simulate()
 			let got = qs.getArray().slice(0, limits[i]),
 				want = tc[1].slice(0, limits[i])
