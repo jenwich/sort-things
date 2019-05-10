@@ -3,18 +3,21 @@ Vue.component('items-creator', {
         return {
             // value: '34\n99\n12\n-7\n1',
             value: '',
+            limit: '',
         }
     },
     template: `
         <div>
-            <textarea v-model="value" cols="30" rows="10"></textarea>
+            <textarea v-model="value" cols="40" rows="10"></textarea>
             <br/>
+            <input type="text" v-model="limit">
             <button v-on:click="create()" v-bind:disabled="value == ''">Create</button>
         </div>`,
     methods: {
         create: function() {
             let items = this.value.trim().split('\n')
-            this.$emit('createItems', items)
+            let limit = parseInt(this.limit.trim()) || 0
+            this.$emit('createItems', items, limit)
             this.value = ''
         }
     }
@@ -62,17 +65,20 @@ let app = new Vue({
                 v-if="page == 'create'"
                 v-on:createItems="onCreateItems"
             ></items-creator>
-            <ol v-if="page == 'create'" style="text-align: left;">
-                <li v-for="item in items">{{ item }}</li>
-            </ol>
-            <textarea rows="6">{{ originalItems | toText }}</textarea>
+            <div>
+                <p>Top {{ items.length }} of {{ originalItems.length }} items</p>
+                <ol v-if="page == 'create'">
+                    <li v-for="item in items">{{ item }}</li>
+                </ol>
+            </div>
+            <textarea cols="40" rows="10">{{ originalItems | toText }}</textarea>
         </div>`,
     methods: {
         onChangePage: function(page) {
             this.page = page
         },
-        onCreateItems: function(val) {
-            axios.post('/create', { items: val }).then((result) => {
+        onCreateItems: function(val, limit) {
+            axios.post('/create', { items: val, limit }).then((result) => {
                 let data = result.data
                 this.page = 'select'
                 this.items = data.items

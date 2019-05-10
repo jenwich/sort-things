@@ -33,7 +33,7 @@ app.get('/status', async (req: Request, res: Response) => {
 
 app.post('/create', async (req: Request, res: Response) => {
 	let items: string[] = req.body['items'] || []
-	let limit: number = req.body['limit'] || 2
+	let limit: number = req.body['limit'] || 0
 
 	let qs = new StatefulQuickSort(items, limit)
 	qs.preExecSort()
